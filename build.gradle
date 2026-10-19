@@ -6,7 +6,11 @@ plugins {
 
 group = 'com.univus'
 version = '0.0.1'
-sourceCompatibility = '21'
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
 
 configurations {
 	compileOnly {
