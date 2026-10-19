@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:unv_base_db}?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    root: INFO
+    com.univus.base: INFO
+    org.mybatis: WARN
+    org.apache.ibatis: WARN

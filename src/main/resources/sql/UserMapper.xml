@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.univus.base.dao.UserDao">
+
+    <resultMap id="BaseResultMap" type="com.univus.base.dao.entity.User">
+        <id column="user_id" jdbcType="CHAR" property="userId" />
+        <result column="mail" jdbcType="VARCHAR" property="mail" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="user_intro" jdbcType="VARCHAR" property="userIntro" />
+        <result column="user_pw" jdbcType="VARCHAR" property="userPw" />
+        <result column="phone_num" jdbcType="VARCHAR" property="phoneNum" />
+        <result column="profile_img" jdbcType="VARCHAR" property="profileImg" />
+        <result column="role_id" jdbcType="INTEGER" property="roleId" />
+        <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
+        <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    </resultMap>
+
+    <select id="findUser" resultMap="BaseResultMap">
+        SELECT *
+        FROM `user`
+        WHERE user_id = #{userId}
+          AND mail = #{mail}
+        LIMIT 1
+    </select>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT *
+        FROM `user`
+        WHERE user_id = #{userId}
+        LIMIT 1
+    </select>
+
+    <select id="findByMail" resultMap="BaseResultMap">
+        SELECT *
+        FROM `user`
+        WHERE mail = #{mail}
+        LIMIT 1
+    </select>
+
+    <insert id="insert" parameterType="com.univus.base.dao.entity.User">
+        INSERT INTO `user` (
+            user_id, mail, user_name, user_intro, user_pw, phone_num, profile_img, role_id, created_at, updated_at
+        ) VALUES (
+            #{userId}, #{mail}, #{userName}, #{userIntro}, #{userPw}, #{phoneNum}, #{profileImg}, #{roleId}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="update" parameterType="com.univus.base.dao.entity.User">
+        UPDATE `user`
+        <set>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userIntro != null">user_intro = #{userIntro},</if>
+            <if test="userPw != null">user_pw = #{userPw},</if>
+            <if test="phoneNum != null">phone_num = #{phoneNum},</if>
+            <if test="profileImg != null">profile_img = #{profileImg},</if>
+            <if test="roleId != null">role_id = #{roleId},</if>
+            updated_at = NOW()
+        </set>
+        WHERE user_id = #{userId}
+    </update>
+
+</mapper>

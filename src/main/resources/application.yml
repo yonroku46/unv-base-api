@@ -1,0 +1,39 @@
+server:
+  servlet:
+    context-path: /api
+    encoding:
+      charset: UTF-8
+      force: true
+  log:
+    filepath: logs/
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    hikari:
+      connection-test-query: SELECT 1
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      max-lifetime: 600000
+      keepalive-time: 300000
+      connection-timeout: 10000
+      validation-timeout: 5000
+      leak-detection-threshold: 5000
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+app:
+  language:
+    default: ja
+  datetime:
+    format: yyyy/MM/dd HH:mm
+
+taskexecutor:
+  corepoolsize: 4
+  queuecapacity: 16
+  maxpoolsize: 16
