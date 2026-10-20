@@ -44,6 +44,9 @@
   - APIエラーメッセージ、レスポンスメッセージ、Validationメッセージ、例外ログ、コード内JavaDocおよびコメントは、すべて**自然な日本語（丁寧語/敬体: です・ます）**で記述します。
   - 不自然な直訳や他言語の混入を厳禁とします。
 - **技術スタック**: Spring Boot 3.3.0, Java 21, Gradle, MyBatis 3, MySQL 8, Spring Security 6, JJWT (io.jsonwebtoken 0.12+), Lombok。
+- **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
+  - `git add`、`git commit`、`git push`、`git reset` などのGitステージングおよびコミット操作は、**AIエージェントが自動または独断で実行することを厳禁とします**。
+  - バージョン管理・コミット・プッシュのタイミングおよびスコープは、すべてユーザー自身が管理・判断します。
 
 ---
 
