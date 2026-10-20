@@ -1,25 +1,25 @@
 # TECH.md
 
-> 本文書は、本プロジェクトにおけるコード品質、型安全性、依存関係管理、および**AIエージェントが厳格に遵守すべき10大禁止事項（Negative Constraints）**を規定します。
+> 本文書は、本プロジェクトにおけるコード品質、型安全性、依存関係管理、および**AIエージェントが厳格に遵守すべき11大禁止事項（Negative Constraints）**を規定します。
 
 ---
 
-## 1. 10大禁止事項（Negative Constraints - STRICT）
+## 1. 11大禁止事項（Negative Constraints - STRICT）
 
-エージェントは以下の10項目に違反してはならず、違反したコードは完了とはみなされません。
+エージェントは以下の11項目に違反してはならず、違反したコードは完了とはみなされません。
 
 1. **生SQL文字列連結の禁止（SQLインジェクション防止）**:
    - MyBatis XMLやJavaコード内で文字列連結（`+` や `${...}`）による動的SQL組み立てを原則禁止します。必ずパラメータプレースホルダー（`#{...}`）を使用してください。
 2. **例外の握りつぶし（空のcatch文）の禁止**:
    - `catch (Exception e) {}` のようにログも記録せず例外を無視することを厳禁とします。必ず `log.error` / `log.warn` を記録するか、適切な `ApplicationException` / `SystemException` として再スローしてください。
-3. **生レスポンス直接返却の禁止**:
+3. **生レスポンス直接返却の禁止（BaseResponseラップの徹底）**:
    - コントローラーから生データ、文字列、Mapなどを直接返却することを禁止します。必ず `ResponseUtils.generateDtoSuccess(...)` を用いて統一された `BaseResponse` 構造で返却してください。
-4. **エンティティ（Entity）のAPI露出禁止**:
+4. **エンティティ（Entity）のAPI露出禁止（DTOの完全分離）**:
    - データベーステーブルと紐付くエンティティ（`dao/entity/*`）をコントローラーのリクエスト・レスポンスに直接使用してはなりません。必ず専用のDTO（`dto/req/*`, `dto/res/*`）を定義し、フィールドコピー（`ResponseUtils.copyObject`等）を行ってください。
-5. **標準出力（`System.out.println`）の禁止**:
+5. **標準出力（`System.out.println`）の禁止（`@Slf4j`統一）**:
    - デバッグ目的を含め、標準出力の直接利用を禁止します。必ずクラスに `@Slf4j` アノテーションを付与し、適切なログレベル（`log.debug`, `log.info`, `log.warn`, `log.error`）で出力してください。
 6. **機密情報・シークレットのハードコード禁止**:
-   - JWTシークレット、DBパスワード、APIキー等の機密情報をJavaソースコード内に直接記述してはなりません。必ず `application-dev.yml`、環境変数、またはシークレット管理サービスを参照してください。
+   - JWTシークレット、DBパスワード、APIキー等の機密情報をJavaソースコード内に直接記述してはなりません。必ず `application-dev.yml`、環境変数、またはシークレット管理プロパティを参照してください。
 7. **無断での外部ライブラリ追加の禁止**:
    - ユーザーの明示的な許可なく、`build.gradle` に新しいサードパーティ依存関係を勝手に追加することを禁止します。
 8. **タイムゾーンおよびロケール規約の違反禁止**:
@@ -35,13 +35,17 @@
 
 ## 2. コーディング規約およびスタイル
 
-### 2.1. Lombokの適切な利用
+### 2.1. パッケージ構造とディレクトリ階層の整合性（Lombokアノテーション処理の保証）
+- Javaのパッケージ構造は必ずディレクトリをドットではなく階層として物理分割して作成します（例: `com/univus/base/config`）。
+- 同一完全修飾名のクラス重複（duplicate class）があると、javacコンパイラがASTパース段階で停止し、Lombokによるコード生成（`log`, getter, setter, builder）が全滅するため、ディレクトリの無欠性を厳格に維持します。
+
+### 2.2. Lombokの適切な利用
 - ゲッター・セッター・equals・hashCode・toStringは `@Data` で自動生成します。
 - レスポンスDTOやエンティティの生成には `@Builder`、`@NoArgsConstructor`、`@AllArgsConstructor` を積極的に活用します。
 - クラスのロギングにはクラス宣言部に `@Slf4j` を付与します。
 
-### 2.2. バリデーション規約
-- リクエストDTOの項目には、Jakarta Validation（`@NotNull`, `@NotBlank`, `@Size`, `@Pattern`, `@Min`, `@Max`）を漏れなく付与し、`message` 属性にユーザーフレンドリーな日本語を設定してください。
+### 2.3. バリデーション規約
+- リクエストDTOの項目には、Jakarta Validation（`@NotNull`, `@NotBlank`, `@Size`, `@Pattern`, `@Min`, `@Max`）を漏れなく付与し、`message` 属性にユーザーフレンドリーな自然な日本語を設定してください。
 
-### 2.3. トランザクション管理
+### 2.4. トランザクション管理
 - 更新系（INSERT, UPDATE, DELETE）のサービスメソッドには必ず `@Transactional(rollbackFor = Exception.class)` を付与し、例外発生時に確実にロールバックされるように実装します。
