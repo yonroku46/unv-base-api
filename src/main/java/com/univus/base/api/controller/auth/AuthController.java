@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * 認証コントローラー
+ * 인증 컨트롤러
  *
  * @author Univus
  */
@@ -32,7 +32,7 @@ public class AuthController extends BaseController {
     private final AuthService authService;
 
     /**
-     * メール・パスワードログイン
+     * 이메일/비밀번호 로그인
      */
     @PostMapping("/login")
     public ResponseEntity<BaseResponse> login(@Valid @RequestBody LoginReq req) {
@@ -44,19 +44,19 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * 新規会員登録 (サインアップ)
+     * 신규 회원가입
      */
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse> signup(@Valid @RequestBody SignupReq req) {
         LoginUserRes res = authService.signup(req);
-        String msg = getMessage(MessageIdConst.I_INSERT_SUCCESS, "ユーザー");
+        String msg = getMessage(MessageIdConst.I_INSERT_SUCCESS, "사용자");
         return ResponseEntity.ok(
                 ResponseUtils.generateDtoSuccess(new Information(MessageIdConst.I_INSERT_SUCCESS, msg), res)
         );
     }
 
     /**
-     * Google認証ログイン
+     * Google 인증 로그인
      */
     @PostMapping("/google")
     public ResponseEntity<BaseResponse> googleLogin(@RequestBody GoogleLoginReq req) {
@@ -68,21 +68,21 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * 現在ログイン中ユーザー情報取得
+     * 현재 로그인 사용자 정보 조회
      */
     @GetMapping("/me")
     @LoginToken
     public ResponseEntity<BaseResponse> getMe() {
         String token = request.getHeader(SecurityConst.TOKEN_HEADER);
         LoginUserRes res = authService.getMe(token);
-        String msg = getMessage(MessageIdConst.I_GETTING_SUCCESS, "ユーザー情報");
+        String msg = getMessage(MessageIdConst.I_GETTING_SUCCESS, "사용자 정보");
         return ResponseEntity.ok(
                 ResponseUtils.generateDtoSuccess(new Information(MessageIdConst.I_GETTING_SUCCESS, msg), res)
         );
     }
 
     /**
-     * トークンリフレッシュ
+     * 토큰 갱신
      */
     @PostMapping("/refresh-token")
     @LoginToken
@@ -103,7 +103,7 @@ public class AuthController extends BaseController {
     }
 
     /**
-     * ログアウト
+     * 로그아웃
      */
     @PostMapping("/logout")
     public ResponseEntity<BaseResponse> logout() {

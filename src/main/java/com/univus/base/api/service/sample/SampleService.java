@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
- * サンプルサービスクラス
+ * 샘플 서비스 클래스
  *
  * @author Univus
  */
@@ -18,7 +18,7 @@ import java.util.Date;
 public class SampleService {
 
     /**
-     * サンプルデータ作成
+     * 샘플 데이터 생성
      */
     public SampleResponseData createSample(SampleRequest request) {
         log.info("Creating sample with title: {}", request.getTitle());
@@ -31,14 +31,14 @@ public class SampleService {
     }
 
     /**
-     * サンプルデータ取得
+     * 샘플 데이터 조회
      */
     public SampleResponseData getSample(String id) {
         log.info("Getting sample by id: {}", id);
         return SampleResponseData.builder()
                 .id(id)
-                .title("サンプルデータ")
-                .content("これはボイラープレートのサンプルデータです。")
+                .title("샘플 데이터")
+                .content("보일러플레이트 샘플 데이터입니다.")
                 .createdAt(new Date())
                 .build();
     }

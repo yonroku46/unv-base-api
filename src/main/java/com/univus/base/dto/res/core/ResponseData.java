@@ -1,7 +1,7 @@
 package com.univus.base.dto.res.core;
 
 /**
- * レスポンス共通基底クラス
+ * 응답 공통 베이스 클래스
  *
  * @author Univus
  */

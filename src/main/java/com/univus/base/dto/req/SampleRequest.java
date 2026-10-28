@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * サンプルリクエストDTO
+ * 샘플 요청 DTO
  *
  * @author Univus
  */
@@ -16,10 +16,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SampleRequest {
 
-    @NotBlank(message = "タイトルは必須項目です。")
-    @Size(max = 100, message = "タイトルは100文字以内で入力してください。")
+    @NotBlank(message = "제목은 필수 입력 항목입니다.")
+    @Size(max = 100, message = "제목은 100자 이내로 입력해주세요.")
     private String title;
 
-    @Size(max = 500, message = "内容は500文字以内で入力してください。")
+    @Size(max = 500, message = "내용은 500자 이내로 입력해주세요.")
     private String content;
 }

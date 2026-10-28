@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * レスポンスエラークラス
+ * 응답 에러 클래스
  *
  * @author Univus
  */
@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 public class Error extends Information {
 
     /**
-     * メソッドパラメータ
+     * 메소드 파라미터
      */
     private String parameter;
 
     /**
-     * エラー詳細
+     * 에러 상세 내용
      */
     private String errorDetail;
 

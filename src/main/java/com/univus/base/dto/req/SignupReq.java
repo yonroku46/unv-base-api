@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 会員登録リクエストDTO
+ * 회원가입 요청 DTO
  *
  * @author Univus
  */
@@ -17,16 +17,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignupReq {
 
-    @NotBlank(message = "メールアドレスは必須です。")
-    @Email(message = "有効なメールアドレス形式で入力してください。")
+    @NotBlank(message = "이메일은 필수 입력 항목입니다.")
+    @Email(message = "올바른 이메일 형식을 입력해주세요.")
     private String email;
 
-    @NotBlank(message = "パスワードは必須です。")
-    @Size(min = 6, message = "パスワードは6文字以上で入力してください。")
+    @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
+    @Size(min = 6, message = "비밀번호는 6자 이상으로 입력해주세요.")
     private String password;
 
-    @NotBlank(message = "お名前は必須です。")
-    @Size(max = 50, message = "お名前は50文字以内で入力してください。")
+    @NotBlank(message = "이름은 필수 입력 항목입니다.")
+    @Size(max = 50, message = "이름은 50자 이내로 입력해주세요.")
     private String userName;
 
     public String getMail() {

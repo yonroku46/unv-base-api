@@ -1,27 +1,27 @@
 ---
 name: add-dao-mapper
-description: MyBatisを使用した新しいDAO（Mapper）インターフェース、Entity、およびXMLマッパーを規約に沿って安全に追加するスキル
+description: MyBatis를 사용한 새로운 DAO(Mapper) 인터페이스, Entity 및 XML 매퍼를 규약에 맞춰 안전하게 추가하는 스킬
 ---
 
-# add-dao-mapper スキルガイド
+# add-dao-mapper 스킬 가이드
 
-本スキルは、`unv-base-api` においてデータベースアクセスを行う新しいDAO、Entity、およびMyBatis XMLマッパーを追加する際の標準手順を定めます。
+본 스킬은 `unv-base-api`에서 데이터베이스 액세스를 수행하는 새로운 DAO, Entity 및 MyBatis XML 매퍼를 추가할 때의 표준 절차를 규정합니다.
 
-## 1. 実装手順（Implementation Flow）
+## 1. 구현 절차 (Implementation Flow)
 
 ```
-[1. Entityクラス作成] ──> [2. @Mapperインターフェース作成] ──> [3. XMLマッパー作成] ──> [4. 検証]
+[1. Entity 클래스 생성] ──> [2. @Mapper 인터페이스 생성] ──> [3. XML 매퍼 생성] ──> [4. 검증]
 ```
 
-### ステップ 1: Entityクラスの作成
-- 配置場所: `com.univus.base.dao.entity.<Model>.java`
-- テーブルの各カラムに対応するフィールドを定義し、`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor` を付与します。
-- スネークケース（`user_id`）に対してJava側はキャメルケース（`userId`）を使用します。
+### 단계 1: Entity 클래스 생성
+- 위치: `com.univus.base.dao.entity.<Model>.java`
+- 테이블 각 컬럼에 대응하는 필드를 정의하고 `@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`를 부여합니다.
+- 스네이크케이스(`user_id`)에 대해 Java 측은 카멜케이스(`userId`)를 사용합니다.
 
-### ステップ 2: DAO（@Mapper）インターフェースの作成
-- 配置場所: `com.univus.base.dao.<Model>Dao.java`
-- インターフェースに `@Mapper` を付与します。
-- 複数パラメータを渡すメソッドには、各引数に `@Param("name")` を明示します。
+### 단계 2: DAO (@Mapper) 인터페이스 생성
+- 위치: `com.univus.base.dao.<Model>Dao.java`
+- 인터페이스에 `@Mapper`를 부여합니다.
+- 복수 파라미터를 전달하는 메소드에는 각 인자에 `@Param("name")`을 명시합니다.
 
 ```java
 package com.univus.base.dao;
@@ -41,10 +41,10 @@ public interface ArticleDao {
 }
 ```
 
-### ステップ 3: MyBatis XMLマッパーの作成
-- 配置場所: `src/main/resources/sql/<category>/<Model>Mapper.xml`
-- `namespace` には作成したDAOの完全修飾クラス名（FQCN）を指定します。
-- SQLインジェクション防止のため、パラメータ参照には必ず `#{paramName}` を使用します（`${...}` の使用は禁止）。
+### 단계 3: MyBatis XML 매퍼 생성
+- 위치: `src/main/resources/sql/<category>/<Model>Mapper.xml`
+- `namespace`에는 생성한 DAO의 완전 정규화 클래스명(FQCN)을 지정합니다.
+- SQL 인젝션 방지를 위해 파라미터 참조에는 반드시 `#{paramName}`을 사용합니다 (`${...}` 사용 금지).
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -78,8 +78,8 @@ public interface ArticleDao {
 </mapper>
 ```
 
-### ステップ 4: コンパイルおよびマッピング検証
-以下のコマンドを実行し、XMLの文法エラーやコンパイルエラーがないことを確認します。
+### 단계 4: 컴파일 및 매핑 검증
+아래 명령어를 실행하여 XML 문법 에러나 컴파일 에러가 없음을 확인합니다.
 
 ```bash
 ./gradlew compileJava

@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 認証・認可ビジネスロジックサービス
+ * 인증/인가 비즈니스 로직 서비스
  *
  * @author Univus
  */
@@ -37,11 +37,11 @@ public class AuthService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
-    // DB未接続または開発時フォールバック用インメモリストア
+    // DB 미연결 또는 개발 환경 폴백용 인메모리 저장소
     private static final Map<String, User> MEMORY_USER_STORE = new ConcurrentHashMap<>();
 
     /**
-     * メールアドレスとパスワードによるログイン
+     * 이메일 및 비밀번호 로그인
      */
     public LoginUserRes login(LoginReq req) {
         String email = req.getEmail().trim().toLowerCase();
@@ -52,7 +52,7 @@ public class AuthService {
             throw new ApplicationException(
                     HttpStatus.UNAUTHORIZED,
                     MessageIdConst.E_LOGIN_USER_FAILED,
-                    "メールアドレスまたはパスワードが正しくありません。"
+                    "이메일 또는 비밀번호가 올바르지 않습니다."
             );
         }
 
@@ -60,7 +60,7 @@ public class AuthService {
             throw new ApplicationException(
                     HttpStatus.UNAUTHORIZED,
                     MessageIdConst.E_LOGIN_USER_FAILED,
-                    "メールアドレスまたはパスワードが正しくありません。"
+                    "이메일 또는 비밀번호가 올바르지 않습니다."
             );
         }
 
@@ -68,7 +68,7 @@ public class AuthService {
     }
 
     /**
-     * 会員登録 (サインアップ)
+     * 회원가입
      */
     @Transactional(rollbackFor = Exception.class)
     public LoginUserRes signup(SignupReq req) {
@@ -80,7 +80,7 @@ public class AuthService {
             throw new ApplicationException(
                     HttpStatus.CONFLICT,
                     MessageIdConst.E_USER_ALREADY_REGISTER,
-                    "既に登録されているメールアドレスです。"
+                    "이미 등록된 이메일입니다."
             );
         }
 
@@ -104,15 +104,15 @@ public class AuthService {
     }
 
     /**
-     * Google認証ログイン (OAuth / Credential)
+     * Google 인증 로그인 (OAuth / Credential)
      */
     @Transactional(rollbackFor = Exception.class)
     public LoginUserRes googleLogin(GoogleLoginReq req) {
         String email = null;
-        String name = "Googleユーザー";
+        String name = "Google 사용자";
         String picture = null;
 
-        // 1. Google ID Token (Credential) の簡易解析
+        // 1. Google ID Token (Credential) 파싱
         if (req.getCredential() != null && !req.getCredential().isBlank()) {
             try {
                 String[] parts = req.getCredential().split("\\.");
@@ -128,7 +128,7 @@ public class AuthService {
             }
         }
 
-        // 2. リクエスト直接指定またはコード経由のフォールバック
+        // 2. 직접 지정 또는 코드 경유 폴백
         if (email == null && req.getEmail() != null) {
             email = req.getEmail().trim().toLowerCase();
         }
@@ -139,7 +139,7 @@ public class AuthService {
             picture = req.getPicture();
         }
 
-        // 3. 開発用デフォルトフォールバック (code/tokenのみ指定時)
+        // 3. 개발용 기본 폴백 (code/token만 지정 시)
         if (email == null) {
             email = "google.user@" + (req.getCode() != null ? "oauth.dev" : "example.com");
         }
@@ -167,11 +167,11 @@ public class AuthService {
     }
 
     /**
-     * トークンに基づく現在ログイン中ユーザーの取得
+     * 토큰 기반 현재 로그인 사용자 조회
      */
     public LoginUserRes getMe(String token) {
         if (token == null || token.isBlank()) {
-            throw new ApplicationException(HttpStatus.UNAUTHORIZED, MessageIdConst.E_NO_ACCESS_TOKEN, "トークンが存在しません。");
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED, MessageIdConst.E_NO_ACCESS_TOKEN, "토큰이 존재하지 않습니다.");
         }
         String cleanToken = token.replace(SecurityConst.TOKEN_PREFIX, "").trim();
         Claims claims = JwtUtils.parseJWT(cleanToken);
@@ -201,11 +201,11 @@ public class AuthService {
     }
 
     /**
-     * トークンリフレッシュ
+     * 토큰 갱신
      */
     public LoginUserRes refreshToken(String refreshToken) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw new ApplicationException(HttpStatus.UNAUTHORIZED, MessageIdConst.E_NO_REFRESH_TOKEN, "リフレッシュトークンが存在しません。");
+            throw new ApplicationException(HttpStatus.UNAUTHORIZED, MessageIdConst.E_NO_REFRESH_TOKEN, "리프레시 토큰이 존재하지 않습니다.");
         }
         String cleanToken = refreshToken.replace(SecurityConst.TOKEN_PREFIX, "").trim();
         Claims claims = JwtUtils.parseJWT(cleanToken);

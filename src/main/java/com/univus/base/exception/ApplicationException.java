@@ -3,7 +3,7 @@ package com.univus.base.exception;
 import org.springframework.http.HttpStatus;
 
 /**
- * アプリケーション例外クラス
+ * 애플리케이션 예외 클래스
  *
  * @author Univus
  */

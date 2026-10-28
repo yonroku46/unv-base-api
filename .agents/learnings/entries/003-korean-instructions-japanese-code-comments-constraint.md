@@ -1,19 +1,18 @@
 ---
 id: 003-korean-instructions-japanese-code-comments-constraint
-title: 韓国語の指示受領時における日本語コードコメント・メッセージ作成の徹底
-date: 2026-10-19
+title: 타겟 로케일 한국어 전환 (한국어 코드 주석 및 메시지 작성 철저)
+date: 2026-10-28
 scope: [locale, i18n, documentation, comments]
 status: active
 ---
 
-### 背景・発生した問題（Problem / Context）
-ユーザーから韓国語で開発指示や要望を受けた際、生成するJavaコードのコメント（JavaDoc）、コミットメッセージ、プロパティファイル、例外メッセージ、およびドキュメント（Markdown）まで韓国語で記述してしまうケースが発生した。
+### 배경 및 변경 사유 (Context)
+기존 일본어 타겟 웹 서비스 보일러플레이트에서 한국어 전용 웹 애플리케이션을 구축하기 위해 타겟 로케일(`Asia/Seoul`, `ko`) 및 전체 응답 메시지, 유효성 검사 메시지, JavaDoc 및 주석을 한국어로 전환함.
 
-### 根本原因（Root Cause）
-エージェントが指示言語（韓国語）に引きずられてしまい、プロジェクトのターゲット環境が「日本国内向けWebサービス（`Asia/Tokyo`, `ja`）」であるという前提要件を見落としていた。
-
-### 解決策および今後のルール（Rule & Solution）
-1. **ユーザーとの対話言語とリポジトリ成果物の厳格な分離**:
-   - ユーザーとのチャット応答はユーザーの言語（韓国語）で行う。
-   - 一方で、リポジトリ内に生成・変更するファイル（JavaDoc、コード内コメント、Markdownドキュメント、メッセージプロパティファイル、ログ文言）は**100% 自然な日本語（丁寧語/敬体: です・ます調）**で統一すること。
-2. 他言語の直訳や混入を厳禁とする。
+### 원칙 및 향후 규칙 (Rule & Solution)
+1. **타겟 로케일**: 대한민국 (`Asia/Seoul`, `ko`).
+2. **코드 및 메시지 작성**:
+   - 리포지토리 내에 생성/변경하는 모든 파일(JavaDoc, 코드 내 주석, Markdown 문서, 메시지 프로퍼티 파일 `ValidationMessages.properties`, 예외 및 로그 문구)은 **100% 자연스러운 한국어(해요체/하십시오체)**로 작성한다.
+3. **설정 정합성**:
+   - `LocaleAspect.java`: 기본 로케일 `Locale.KOREA`, 기본 언어 `ko`
+   - `application-dev.yml`: `serverTimezone=Asia/Seoul`

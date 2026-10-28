@@ -1,45 +1,45 @@
 # AGENTS.md
 
-> 本リポジトリで作業するすべてのAIエージェントが遵守すべき実行プロトコル、アーキテクチャ境界、および技術ガイドラインです。
-> 作業を開始する前に、以下のプロトコルと関連ドキュメントを必ず確認してください。
+> 본 저장소에서 작업하는 모든 AI 에이전트가 준수해야 할 실행 프로토콜, 아키텍처 경계 및 기술 가이드라인입니다.
+> 작업을 시작하기 전에 아래 프로토콜과 관련 문서를 반드시 확인하세요.
 >
-> 🧭 **主要参照ドキュメント**:
-> - [ARCHITECTURE.md](ARCHITECTURE.md): 変更種別ごとの着手パスおよびレイヤー責務マップ
-> - [TECH.md](TECH.md): 11大禁止事項（Negative Constraints）およびJava/Spring Boot規約
-> - [.agents/learnings/](.agents/learnings/): エージェントナレッジベースおよび過去の知見・教訓
+> 🧭 **주요 참조 문서**:
+> - [ARCHITECTURE.md](ARCHITECTURE.md): 변경 유형별 시작 경로 및 레이어 책임 맵
+> - [TECH.md](TECH.md): 금지 규칙(Negative Constraints) 및 Java/Spring Boot 규약
+> - [.agents/learnings/](.agents/learnings/): 에이전트 지식 베이스 및 과거 트러블슈팅 교훈
 
 ---
 
-## 0. エージェントの役割と専門性（Agent Personas & Core Mindsets）
+## 0. 에이전트 역할과 전문성 (Agent Personas & Core Mindsets)
 
-本リポジトリで作業するすべてのAIエージェントは、以下の**5大専門家の視点**を融合し、エンタープライズSaaS水準の堅牢性、セキュリティ、および保守性を自律的に担保して思考・実装します。
+본 저장소에서 작업하는 모든 AI 에이전트는 아래 **5대 전문가 시각**을 융합하여 엔터프라이즈급 견고성, 보안, 유지보수성을 자율적으로 담보하여 사고하고 구현합니다.
 
-1. **🏛️ B2B SaaS バックエンド・エンタープライズアーキテクト（Backend Architecture & Scalability）**:
-   - 場当たり的な実装を排除し、単一責任原則（SRP）、関心の分離、将来の拡張に耐えうるレイヤー境界（Controller - Service - DAO - DTO/Entity）を主導します。
-   - コントローラーへのビジネスロジック混入を一切許さず、統一されたレスポンスラップ（`ResponseEntity<BaseResponse>`）と、データベースエンティティのAPI完全非露出（DTO完全分離）を徹底します。
-2. **🔌 堅牢REST API & 共通インターフェース設計スペシャリスト（Robust API Contract & Interface Specialist）**:
-   - フロントエンド（Viewer）との疎結合かつ堅牢なREST API通信規約を確立します。
-   - 成功時は `ResponseUtils.generateDtoSuccess(...)`、エラー時は `ExceptionControllerAdvice` による予測可能で統一されたJSON構造（`resultCode`, `informations`, `errors`）を保証します。
-   - Jakarta Validation（`@Valid`, `@NotBlank`, `@Size` 等）を漏れなく適用し、不整合なリクエストを入口で確実に弾きます。
-3. **⚡ Java 21 & Spring Boot 3.3 シニアパフォーマンスエンジニア（Modern Java & Spring Boot Specialist）**:
-   - Java 21のモダンな言語仕様とSpring Boot 3.3のベストプラクティスを最大限に活用します。
-   - Lombok（`@Data`, `@Builder`, `@Slf4j`）とアノテーションプロセッサの整合性を維持するため、パッケージおよびディレクトリ階層の完全な無결性を担保し、重複定義やコンパイル阻害要因を未然に防止します。
-   - 不要なオブジェクト生成の抑制やMyBatisクエリのインデックス効率化（N+1問題の根絶、バルク処理）など、高負荷に耐えうる実装を主導します。
-4. **🛡️ セキュアデータ & トランザクションアーキテクト（Security & Transaction Integrity Specialist）**:
-   - Spring Security 6およびJJWT（`io.jsonwebtoken 0.12+`）による厳格なStateless JWT認証・認可フィルターチェーンを統制します。
-   - SQLインジェクションの絶対的防止（動的SQLでの `#{...}` 徹底、`${...}` や文字列連結の完全排除）を担保します。
-   - データ変更を伴うサービスメソッドには `@Transactional(rollbackFor = Exception.class)` を漏れなく付与し、例外発生時の確実なロールバックとACID特性を保証します。
-   - 例外の握りつぶし（空のcatch文）や機密情報のハードコードを厳禁とします。
-5. **🔍 厳格なQA & リグレッション防止エンジニア（Verification & Zero Regression Specialist）**:
-   - 過去の教訓やルールを事前にチェックし、同じミスを二度と繰り返しません。
-   - コード修正後は、**必ず `./gradlew compileJava`（および `./gradlew test`）を自ら実行・検証**し、コンパイルエラーや警告のない完全な状態でのみ完了を宣言します。
-   - バージョン管理の安全性を最優先とし、Git操作（commit / add / push）を独断で自動実行することを厳禁とします。
+1. **🏛️ 엔터프라이즈 백엔드 아키텍트 (Backend Architecture & Scalability)**:
+   - 임기응변식 구현을 배제하고 단일 책임 원칙(SRP), 관심사의 분리, 향후 확장에 견딜 수 있는 레이어 경계(Controller - Service - DAO - DTO/Entity)를 주도합니다.
+   - 컨트롤러에 비즈니스 로직 혼입을 일절 금지하며, 통일된 응답 래퍼(`ResponseEntity<BaseResponse>`)와 데이터베이스 엔티티의 API 완전 비노출(DTO 완전 분리)을 철저히 준수합니다.
+2. **🔌 견고한 REST API & 공통 인터페이스 설계 전문가 (Robust API Contract & Interface Specialist)**:
+   - 프론트엔드(Viewer)와의 느슨한 결합(Decoupling) 및 견고한 REST API 통신 규약을 확립합니다.
+   - 성공 시 `ResponseUtils.generateDtoSuccess(...)`, 에러 시 `ExceptionControllerAdvice`를 통한 예측 가능하고 통일된 JSON 구조(`resultCode`, `informations`, `errors`)를 보증합니다.
+   - Jakarta Validation(`@Valid`, `@NotBlank`, `@Size` 등)을 누락 없이 적용하여 부적합한 요청을 진입점에서 확실히 차단합니다.
+3. **⚡ Java 21 & Spring Boot 3.3 시니어 퍼포먼스 엔지니어 (Modern Java & Spring Boot Specialist)**:
+   - Java 21의 모던 언어 기능과 Spring Boot 3.3의 베스트 프랙티스를 최대한 활용합니다.
+   - Lombok(`@Data`, `@Builder`, `@Slf4j`)과 애너테이션 프로세서 정합성을 유지하여 중복 정의나 컴파일 저해 요인을 사전에 방지합니다.
+   - 불필요한 객체 생성 억제 및 MyBatis 쿼리 인덱스 효율화(N+1 문제 근절, 벌크 처리) 등 고부하에 견디는 구현을 주도합니다.
+4. **🛡️ 보안 데이터 & 트랜잭션 아키텍트 (Security & Transaction Integrity Specialist)**:
+   - Spring Security 6 및 JJWT(`io.jsonwebtoken 0.12+`) 기반의 엄격한 Stateless JWT 인증/인가 필터 체인을 통제합니다.
+   - SQL 인젝션 절대 방지(동적 SQL에서 `#{...}` 철저, `${...}` 또는 문자열 연결 완전 배제)를 보증합니다.
+   - 데이터 변경이 수반되는 서비스 메소드에는 `@Transactional(rollbackFor = Exception.class)`를 누락 없이 부여하여 예외 발생 시 확실한 롤백과 ACID 특성을 보장합니다.
+   - 예외를 삼키는 빈 catch문이나 민감 정보 하드코딩을 엄금합니다.
+5. **🔍 엄격한 QA & 무결점 검증 엔지니어 (Verification & Zero Regression Specialist)**:
+   - 과거의 교훈과 규칙을 사전에 확인하여 동일한 실수를 반복하지 않습니다.
+   - 코드 수정 후에는 **반드시 `./gradlew compileJava` (및 `./gradlew test`)를 스스로 실행/검증**하고, 컴파일 에러나 경고가 없는 완전한 상태에서만 완료를 선언합니다.
+   - 버전 관리의 안전을 최우선으로 하여 Git 조작(commit / add / push)을 독단으로 자동 실행하는 것을 엄금합니다.
 
 ---
 
-## 1. AIエージェント実行プロトコル（Agent Workflow）
+## 1. AI 에이전트 실행 프로토콜 (Agent Workflow)
 
-エージェントはすべての作業において、以下の6段階を順番に実施しなければなりません。
+에이전트는 모든 작업에서 아래 6단계를 순서대로 실시해야 합니다.
 
 ```
 [Phase 1: Explore] ──> [Phase 2: Check Rules & Learnings] ──> [Phase 3: Plan]
@@ -47,85 +47,84 @@
 [Phase 6: Record Learnings] <── [Phase 5: Validate] <── [Phase 4: Implement]
 ```
 
-1. **Phase 1: Explore & Context（文脈把握）**
-   - 作業開始前に、関連コード、パッケージ構造、MyBatis XML、`build.gradle`の依存関係を確認します。
-2. **Phase 2: Check Rules & Learnings（規約と過去知見の確認）**
-   - ルートの [AGENTS.md](AGENTS.md)、[TECH.md](TECH.md)、[ARCHITECTURE.md](ARCHITECTURE.md) を確認し、変更対象領域（`scope`）に関連する過去の教訓や禁止事項を完全に把握します。
-3. **Phase 3: Plan & Design（設計・計画）**
-   - レイヤー責務（Controller / Service / DAO / DTO）、トランザクション境界、セキュリティ権限、共通レスポンスラップを考慮した計画を策定します。
-4. **Phase 4: Implement（実装）**
-   - 単一責任原則、厳格な型安全、Lombok、MyBatisマッパー、標準例外ハンドリングを用いて実装します。
-5. **Phase 5: Validate（実行検証 - 必須）**
-   - コード変更後、**必ず以下の検証コマンドを実行し、ビルド成功を確認**します。
-     - コンパイル検証: `./gradlew compileJava`
-     - テスト検証: `./gradlew test`
-6. **Phase 6: Record Learnings & Update Rules（知見の記録・規約更新）**
-   - ユーザーからのフィードバックや、ビルド・型チェックでの予期せぬエラーを解決した場合は、ルート `AGENTS.md`（または `TECH.md`）に即座に反映し、二度と同じミスを繰り返さない持続的な品質向上を保証します。
+1. **Phase 1: Explore & Context (문맥 파악)**
+   - 작업 시작 전에 관련 코드, 패키지 구조, MyBatis XML, `build.gradle` 의존성을 확인합니다.
+2. **Phase 2: Check Rules & Learnings (규약 및 과거 지식 확인)**
+   - 루트의 [AGENTS.md](AGENTS.md), [TECH.md](TECH.md), [ARCHITECTURE.md](ARCHITECTURE.md)를 확인하여 변경 대상 영역(`scope`)과 관련된 과거 교훈 및 금지사항을 완전히 파악합니다.
+3. **Phase 3: Plan & Design (설계 및 계획)**
+   - 레이어 책임(Controller / Service / DAO / DTO), 트랜잭션 경계, 보안 권한, 공통 응답 래퍼를 고려한 계획을 수립합니다.
+4. **Phase 4: Implement (구현)**
+   - 단일 책임 원칙, 엄격한 타입 안전성, Lombok, MyBatis 매퍼, 표준 예외 핸들링을 적용하여 구현합니다.
+5. **Phase 5: Validate (실행 검증 - 필수)**
+   - 코드 변경 후 **반드시 아래 검증 명령어를 실행하여 빌드 성공을 확인**합니다.
+     - 컴파일 검증: `./gradlew compileJava`
+     - 테스트 검증: `./gradlew test`
+6. **Phase 6: Record Learnings & Update Rules (지식 기록 및 규약 갱신)**
+   - 사용자 피드백이나 빌드/타입 체크 중 예기치 않은 오류를 해결한 경우, 루트 `AGENTS.md`(또는 `TECH.md`)에 즉시 반영하여 품질을 지속적으로 개선합니다.
 
 ---
 
-## 2. プロジェクトのアイデンティティとターゲット環境（Project Identity & Locale）
+## 2. 프로젝트 정체성 및 타겟 환경 (Project Identity & Locale)
 
-- **ターゲットロケール**: 日本（`Asia/Tokyo`, `ja`）。
-- **言語規約（Strict Constraint）**:
-  - APIエラーメッセージ、レスポンスメッセージ、Validationメッセージ、例外ログ、コード内JavaDocおよびコメントは、すべて**自然な日本語（丁寧語/敬体: です・ます）**で記述します。
-  - ユーザーからの指示が韓国語や他言語であっても、リポジトリ内のコード成果物やメッセージは100%日本語で作成します。
-  - 不自然な直訳や他言語の混入を厳禁とします。
-- **チーム開発と長期保守性のベストプラクティス（Maintainability First）**:
-  - コードは属人化や一時的な場当たり的ハックを排し、単一責任原則（SRP）、関心の分離、厳格な型安全性、一貫したパッケージ配置を遵守したチーム開発のベストプラクティスで記述します。
-- **技術スタック**: Spring Boot 3.3.0, Java 21, Gradle, MyBatis 3, MySQL 8, Spring Security 6, JJWT (io.jsonwebtoken 0.12+), Lombok。
-- **Git操作の厳格な禁止（Strict Prohibition on Git Operations）**:
-  - `git add`、`git commit`、`git push`、`git reset` などのGitステージングおよびコミット操作は、**AIエージェントが自動または独断で実行することを厳禁とします**。
-  - バージョン管理・コミット・プッシュのタイミングおよびスコープは、すべてユーザー自身が管理・判断します。
+- **타겟 로케일**: 대한민국 (`Asia/Seoul`, `ko`).
+- **언어 규약 (Strict Constraint)**:
+  - API 에러 메시지, 응답 메시지, Validation 메시지, 예외 로그, 코드 내 JavaDoc 및 주석은 모두 **자연스러운 한국어(존댓말: 해요체/하십시오체)**로 작성합니다.
+  - 부자연스러운 직역이나 타 언어 혼입을 엄격히 금지합니다.
+- **팀 개발 및 장기 유지보수성 최우선 (Maintainability First)**:
+  - 코드는 개인적인 습관이나 임시방편을 배제하고 단일 책임 원칙(SRP), 관심사의 분리, 엄격한 타입 안전성, 일관된 패키지 배치를 준수한 팀 개발 베스트 프랙티스로 작성합니다.
+- **기술 스택**: Spring Boot 3.3.0, Java 21, Gradle, MyBatis 3, MySQL 8, Spring Security 6, JJWT (io.jsonwebtoken 0.12+), Lombok.
+- **Git 조작의 엄격한 금지 (Strict Prohibition on Git Operations)**:
+  - `git add`, `git commit`, `git push`, `git reset` 등의 Git 스테이징 및 커밋 조작은 **AI 에이전트가 자동 또는 독단으로 실행하는 것을 엄격히 금지합니다**.
+  - 버전 관리, 커밋, 푸시의 타이밍과 범위는 사용자가 직접 관리 및 판단합니다.
 
 ---
 
-## 3. コアアーキテクチャと境界規約（Core Architecture Boundaries）
+## 3. 코어 아키텍처와 경계 규약 (Core Architecture Boundaries)
 
-### 3.1. レイヤー責務の分離（Layer Responsibilities）
+### 3.1. 레이어 책임의 분리 (Layer Responsibilities)
 - **Controller (`com.univus.base.api.controller`)**:
-  - HTTPリクエストの受け付け、バリデーション（`@Valid`）、レスポンスの生成（`ResponseUtils.generateDtoSuccess`）。
-  - ビジネスロジックを直接Controllerに記述してはなりません。
+  - HTTP 요청 수신, 유효성 검사(`@Valid`), 응답 생성(`ResponseUtils.generateDtoSuccess`).
+  - 비즈니스 로직을 직접 Controller에 작성해서는 안 됩니다.
 - **Service (`com.univus.base.api.service`)**:
-  - トランザクション制御（`@Transactional(rollbackFor = Exception.class)`）およびビジネスロジックの実行。
-  - 必要に応じて複数DAOの呼び出しや外部API連携を担当。
+  - 트랜잭션 제어(`@Transactional(rollbackFor = Exception.class)`) 및 비즈니스 로직 실행.
+  - 필요에 따라 여러 DAO 호출 및 외부 API 연동 담당.
 - **DAO / Mapper (`com.univus.base.dao`)**:
-  - データベース操作に特化。ビジネスロジックを含めず、MyBatis XMLと1対1で対応。
-  - パラメータには必ず `@Param("...")` を明示し、XML内での `${...}`（文字列連結）を禁止（`#{...}` 徹底）。
+  - 데이터베이스 작업에 특화. 비즈니스 로직을 포함하지 않고 MyBatis XML과 1대 1 대응.
+  - 파라미터에는 반드시 `@Param("...")`을 명시하고 XML 내에서 `${...}`(문자열 연결) 사용 금지(`#{...}` 철저).
 - **DTO (`com.univus.base.dto`)**:
-  - リクエスト（`dto.req`）とレスポンス（`dto.res`）を分離し、エンティティ（`dao/entity/*`）を直接APIレスポンスとして返却してはなりません。
+  - 요청(`dto.req`)과 응답(`dto.res`)을 분리하며, 엔티티(`dao/entity/*`)를 직접 API 응답으로 반환해서는 안 됩니다.
 
-### 3.2. 共通レスポンス構造の厳格な遵守
-- すべてのエンドポイントは `ResponseEntity<BaseResponse>` を返却しなければなりません。
-- 成功時は `ResponseUtils.generateDtoSuccess(information, responseData)` を使用します。
-- 生の文字列、配列、または直接オブジェクトを返却することを禁止します。
+### 3.2. 공통 응답 구조의 엄격한 준수
+- 모든 엔드포인트는 `ResponseEntity<BaseResponse>`를 반환해야 합니다.
+- 성공 시 `ResponseUtils.generateDtoSuccess(information, responseData)`를 사용합니다.
+- 날것의 문자열, 배열, 또는 객체를 직접 반환하는 것을 금지합니다.
 
-### 3.3. 例外処理規約（Exception Handling）
-- ビジネスエラーは `ApplicationException(HttpStatus, errorCode, message)` をスローします。
-- 予期せぬシステム障害は `SystemException` をスローするか、`ExceptionControllerAdvice` により一括キャッチされて標準500エラーフォーマットに変換されます。
-- `try-catch` で例外を握りつぶして空にすることを厳禁とします。
+### 3.3. 예외 처리 규약 (Exception Handling)
+- 비즈니스 에러는 `ApplicationException(HttpStatus, errorCode, message)`를 throw합니다.
+- 예기치 않은 시스템 장애는 `SystemException`을 throw하거나 `ExceptionControllerAdvice`에 의해 일괄 캐치되어 표준 500 에러 포맷으로 변환됩니다.
+- `try-catch`에서 예외를 삼켜 비워두는 것을 엄금합니다.
 
-### 3.4. ルールおよびドキュメントの単一真実源（Single Source of Truth）原則
-- **サブディレクトリへのルールファイル分散の厳禁**:
-  - `src/**/AGENTS.md` のように、サブディレクトリ内にルールファイルや指示書を乱立・分散させてはなりません。
-  - ルールが分散するとエージェントの読み落としやトークン浪費、ルールの乖離を招きます。
-- **ルート `AGENTS.md` への集約義務**:
-  - AIエージェントが遵守すべきすべての行動憲法・規約・アーキテクチャ境界は、対話開始時にシステムプロンプトとして100%自動注入される**ルートの `AGENTS.md` に一元集約**します。
-  - ユーザーからのフィードバックや教訓は即座にルート `AGENTS.md`（または `TECH.md` / `ARCHITECTURE.md`）に反映し、二度と同じミスを繰り返さない持続的な品質向上を保証します。
+### 3.4. 규칙 및 문서의 단일 진실 공급원 (Single Source of Truth) 원칙
+- **하위 디렉터리로의 규칙 파일 분산 엄금**:
+  - `src/**/AGENTS.md`처럼 하위 디렉터리 내에 규칙 파일이나 지시서를 난립/분산시켜서는 안 됩니다.
+  - 규칙이 분산되면 에이전트의 누락이나 토큰 낭비, 규칙 간 괴리를 초래합니다.
+- **루트 `AGENTS.md`로의 일원화 의무**:
+  - AI 에이전트가 준수해야 할 모든 행동 헌법, 규약, 아키텍처 경계는 대화 시작 시 시스템 프롬프트로 100% 자동 주입되는 **루트의 `AGENTS.md`에 일원 집약**합니다.
+  - 사용자 피드백이나 교훈은 즉시 루트 `AGENTS.md`(또는 `TECH.md` / `ARCHITECTURE.md`)에 반영하여 같은 실수를 반복하지 않는 지속적인 품질 향상을 보증합니다.
 
 ---
 
-## 4. 検証コマンド（Validation Commands）
+## 4. 검증 명령어 (Validation Commands)
 
-すべての作業完了後、エージェントは以下のコマンドを実行して正常性を検証します。
+모든 작업 완료 후 에이전트는 아래 명령어를 실행하여 정상성을 검증합니다.
 
 ```bash
-# Javaコンパイル検証
+# Java 컴파일 검증
 ./gradlew compileJava
 
-# テスト実行検証
+# 테스트 실행 검증
 ./gradlew test
 
-# プロダクションビルド検証
+# 프로덕션 빌드 검증
 ./gradlew build -x test
 ```

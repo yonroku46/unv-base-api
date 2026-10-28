@@ -19,7 +19,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * Spring MVC カスタム設定 (CORS, MessageSource, ContentNegotiation)
+ * Spring MVC 커스텀 설정 (CORS, MessageSource, ContentNegotiation)
  *
  * @author Univus
  */

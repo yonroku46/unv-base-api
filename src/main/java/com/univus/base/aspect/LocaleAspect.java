@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 /**
- * リクエストロケール設定アスペクト
+ * 요청 로케일 설정 Aspect
  *
  * @author Univus
  */
@@ -22,18 +22,18 @@ public class LocaleAspect {
     @Autowired
     protected HttpServletRequest request;
 
-    public static Locale LOCALE = Locale.JAPAN;
+    public static Locale LOCALE = Locale.KOREA;
 
-    @Value("${app.language.default:ja}")
+    @Value("${app.language.default:ko}")
     private String systemLanguageDefault;
 
     @Before("execution(* com.univus.base.api.controller..*.*(..))")
     public void getLocale() {
         String language = request.getHeader(SecurityConst.LANGUAGE);
         if (language != null) {
-            LOCALE = language.toLowerCase().contains("ja") ? Locale.JAPAN : Locale.ENGLISH;
+            LOCALE = language.toLowerCase().contains("ko") ? Locale.KOREA : Locale.ENGLISH;
         } else {
-            LOCALE = "ja".equalsIgnoreCase(systemLanguageDefault) ? Locale.JAPAN : Locale.ENGLISH;
+            LOCALE = "ko".equalsIgnoreCase(systemLanguageDefault) ? Locale.KOREA : Locale.ENGLISH;
         }
     }
 }

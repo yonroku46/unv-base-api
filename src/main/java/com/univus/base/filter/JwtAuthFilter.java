@@ -34,7 +34,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
- * JWT認証処理フィルター
+ * JWT 인증 처리 필터
  *
  * @author Univus
  */
@@ -79,7 +79,7 @@ public class JwtAuthFilter implements Filter {
         Class<?> clazz = handlerMethod.getBeanType();
         Method method = handlerMethod.getMethod();
 
-        // ログイン中の判定
+        // 로그인 중인지 판별
         if (method.isAnnotationPresent(LoginToken.class)) {
             LoginToken loginToken = method.getAnnotation(LoginToken.class);
             if (loginToken.required()) {
@@ -176,7 +176,7 @@ public class JwtAuthFilter implements Filter {
                 return dbUser;
             }
         }
-        // DB未接続またはユーザーが見つからない場合のフォールバック（JWTクレームをベースにUser構築）
+        // DB 미연결 또는 사용자를 찾을 수 없는 경우 폴백 (JWT 클레임 기반 User 객체 생성)
         if (userId != null) {
             Integer roleId = claims.get("roleId", Integer.class);
             return User.builder()

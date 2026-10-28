@@ -1,7 +1,7 @@
 package com.univus.base.exception;
 
 /**
- * システム内部例外クラス
+ * 시스템 내부 예외 클래스
  *
  * @author Univus
  */

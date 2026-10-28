@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * ユーザーエンティティ
+ * 사용자 엔티티
  *
  * @author Univus
  */
@@ -19,52 +19,52 @@ import java.util.Date;
 public class User {
 
     /**
-     * ユーザーID
+     * 사용자 ID
      */
     private String userId;
 
     /**
-     * メールアドレス
+     * 이메일
      */
     private String mail;
 
     /**
-     * ユーザー名
+     * 사용자 이름
      */
     private String userName;
 
     /**
-     * 自己紹介
+     * 자기소개
      */
     private String userIntro;
 
     /**
-     * パスワード（暗号化）
+     * 비밀번호 (암호화)
      */
     private String userPw;
 
     /**
-     * 電話番号
+     * 전화번호
      */
     private String phoneNum;
 
     /**
-     * プロフィール画像URL
+     * 프로필 이미지 URL
      */
     private String profileImg;
 
     /**
-     * ロールID (1: CLIENT, 2: PARTNER, 8: MANAGER, 9: ROOT)
+     * 권한 역할 ID (1: CLIENT, 2: PARTNER, 8: MANAGER, 9: ROOT)
      */
     private Integer roleId;
 
     /**
-     * 作成日時
+     * 생성일시
      */
     private Date createdAt;
 
     /**
-     * 更新日時
+     * 수정일시
      */
     private Date updatedAt;
 }

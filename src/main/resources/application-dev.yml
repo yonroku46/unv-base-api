@@ -6,13 +6,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/unv_base_db?characterEncoding=UTF-8&serverTimezone=Asia/Tokyo
+    url: jdbc:mysql://localhost:3306/unv_base_db?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
     username: root
     password: admin
 
 security:
   jwt:
-    # 開発環境用デフォルトシークレットキー（本番環境では環境変数またはSSMで上書き）
+    # 개발 환경용 기본 시크릿 키 (운영 환경에서는 환경변수 또는 SSM으로 재정의)
     secret-key: unv-base-api-development-secret-key-must-be-at-least-256-bits-long!!
   oauth2:
     base: http://${server.address}:${server.viewport}

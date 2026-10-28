@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 基本コンテキスト起動テスト
+ * 기본 컨텍스트 실행 테스트
  *
  * @author Univus
  */

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 共通APIレスポンスラッパー
+ * 공통 API 응답 래퍼
  *
  * @author Univus
  */
@@ -14,27 +14,27 @@ import lombok.NoArgsConstructor;
 public class BaseResponse<T> {
 
     /**
-     * 処理結果コード (0: SUCCESS, 1: FAILED)
+     * 처리 결과 코드 (0: SUCCESS, 1: FAILED)
      */
     private int resultCode;
 
     /**
-     * エラー発生フラグ
+     * 에러 발생 여부 플래그
      */
     private boolean hasErrors;
 
     /**
-     * メッセージリスト
+     * 안내 메시지 목록
      */
     private List<Information> informations;
 
     /**
-     * エラーリスト
+     * 에러 목록
      */
     private List<Error> errors;
 
     /**
-     * レスポンスデータペイロード
+     * 응답 데이터 페이로드
      */
     private ResponseData responseData;
 }

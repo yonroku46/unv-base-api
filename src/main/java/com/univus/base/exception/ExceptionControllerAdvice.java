@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 共通例外ハンドラー
+ * 공통 예외 핸들러
  *
  * @author Univus
  */
@@ -42,7 +42,7 @@ public class ExceptionControllerAdvice {
     protected HttpServletResponse response;
 
     /**
-     * アプリケーションビジネス例外ハンドリング
+     * 애플리케이션 비즈니스 예외 핸들링
      */
     @ExceptionHandler(ApplicationException.class)
     public ResponseEntity<BaseResponse> handleApplicationException(ApplicationException exception) {
@@ -56,7 +56,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * バリデーションエラーハンドリング
+     * 유효성 검사 에러 핸들링
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<BaseResponse> handleValidationException(MethodArgumentNotValidException exception) {
@@ -75,7 +75,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * JSONパース例外ハンドリング
+     * JSON 파싱 예외 핸들링
      */
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<BaseResponse> handleJsonProcessingException(JsonProcessingException exception) {
@@ -87,7 +87,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * JWT期限切れ例外ハンドリング
+     * JWT 만료 예외 핸들링
      */
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<BaseResponse> handleExpiredJwtException(ExpiredJwtException exception) {
@@ -99,7 +99,7 @@ public class ExceptionControllerAdvice {
     }
 
     /**
-     * システム予期せぬ例外ハンドリング (500)
+     * 시스템 예기치 않은 예외 핸들링 (500)
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<BaseResponse> handleGeneralException(Exception exception) {

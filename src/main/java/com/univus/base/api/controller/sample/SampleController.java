@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * サンプルコントローラー
+ * 샘플 컨트롤러
  *
  * @author Univus
  */
@@ -31,24 +31,24 @@ public class SampleController extends BaseController {
     private SampleService sampleService;
 
     /**
-     * サンプルデータ取得エンドポイント
+     * 샘플 데이터 조회 엔드포인트
      */
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse> getSample(@PathVariable("id") String id) {
         SampleResponseData data = sampleService.getSample(id);
-        String msg = getMessage(MessageIdConst.I_GETTING_SUCCESS, "サンプル");
+        String msg = getMessage(MessageIdConst.I_GETTING_SUCCESS, "샘플");
         return ResponseEntity.ok(
                 ResponseUtils.generateDtoSuccess(new Information(MessageIdConst.I_GETTING_SUCCESS, msg), data)
         );
     }
 
     /**
-     * サンプルデータ作成エンドポイント
+     * 샘플 데이터 생성 엔드포인트
      */
     @PostMapping
     public ResponseEntity<BaseResponse> createSample(@Valid @RequestBody SampleRequest request) {
         SampleResponseData data = sampleService.createSample(request);
-        String msg = getMessage(MessageIdConst.I_INSERT_SUCCESS, "サンプル");
+        String msg = getMessage(MessageIdConst.I_INSERT_SUCCESS, "샘플");
         return ResponseEntity.ok(
                 ResponseUtils.generateDtoSuccess(new Information(MessageIdConst.I_INSERT_SUCCESS, msg), data)
         );

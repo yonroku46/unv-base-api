@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * GoogleログインリクエストDTO
+ * Google 로그인 요청 DTO
  *
  * @author Univus
  */
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class GoogleLoginReq {
 
     /**
-     * OAuth認可コード (Code Flow)
+     * OAuth 인가 코드 (Code Flow)
      */
     private String code;
 
@@ -25,7 +25,7 @@ public class GoogleLoginReq {
     private String credential;
 
     /**
-     * 開発用・テスト用フォールバック
+     * 개발 및 테스트용 폴백
      */
     private String email;
     private String name;

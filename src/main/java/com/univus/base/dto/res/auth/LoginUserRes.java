@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * ログイン・認証成功レスポンス
+ * 로그인/인증 성공 응답 DTO
  *
  * @author Univus
  */

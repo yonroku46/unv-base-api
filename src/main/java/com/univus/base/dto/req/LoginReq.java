@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ログインリクエストDTO
+ * 로그인 요청 DTO
  *
  * @author Univus
  */
@@ -16,15 +16,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginReq {
 
-    @NotBlank(message = "メールアドレスは必須です。")
-    @Email(message = "有効なメールアドレス形式で入力してください。")
+    @NotBlank(message = "이메일은 필수 입력 항목입니다.")
+    @Email(message = "올바른 이메일 형식을 입력해주세요.")
     private String email;
 
-    @NotBlank(message = "パスワードは必須です。")
+    @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
     private String password;
 
     /**
-     * mailエイリアス対応
+     * mail 별칭 지원
      */
     public String getMail() {
         return this.email;

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * レスポンスインフォメーションクラス
+ * 응답 안내 정보 클래스
  *
  * @author Univus
  */
@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 public class Information {
 
     /**
-     * メッセージID
+     * 메시지 ID
      */
     private String messageId;
 
     /**
-     * メッセージ本文
+     * 메시지 본문
      */
     private String message;
 }

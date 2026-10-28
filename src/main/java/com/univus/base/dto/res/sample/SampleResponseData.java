@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 /**
- * サンプルレスポンスデータ
+ * 샘플 응답 데이터
  *
  * @author Univus
  */

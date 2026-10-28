@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * ユーザーDAOマッパー
+ * 사용자 DAO 매퍼
  *
  * @author Univus
  */
@@ -13,27 +13,27 @@ import org.apache.ibatis.annotations.Param;
 public interface UserDao {
 
     /**
-     * ユーザーIDとメールアドレスでユーザーを検索
+     * 사용자 ID 및 이메일로 사용자 조회
      */
     User findUser(@Param("userId") String userId, @Param("mail") String mail);
 
     /**
-     * ユーザーIDで検索
+     * 사용자 ID로 조회
      */
     User findById(@Param("userId") String userId);
 
     /**
-     * メールアドレスで検索
+     * 이메일로 조회
      */
     User findByMail(@Param("mail") String mail);
 
     /**
-     * ユーザー登録
+     * 사용자 등록
      */
     int insert(User user);
 
     /**
-     * ユーザー更新
+     * 사용자 수정
      */
     int update(User user);
 }
